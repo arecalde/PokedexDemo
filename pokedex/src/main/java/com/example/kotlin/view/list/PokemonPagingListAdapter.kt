@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlin.R
 import com.example.kotlin.data.model.PokemonListEntryResult
 
-class PokemonPagingListAdapter :
+class PokemonPagingListAdapter() :
     PagingDataAdapter<PokemonListEntryResult, PokemonPagingListAdapter.PokemonListEntryViewHolder>(
         PokemonDiffer
     ) {
@@ -28,7 +29,14 @@ class PokemonPagingListAdapter :
 
     class PokemonListEntryViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bindView(item: PokemonListEntryResult) {
-            view.findViewById<TextView>(R.id.pokemon_name).text = item.name
+            val textView = view.findViewById<TextView>(R.id.pokemon_name)
+            textView.text = item.name
+            textView.setOnClickListener {
+                val action = PokemonListFragmentDirections.actionPokemonListFragmentToDetailFragment(
+                    item.url, item.name
+                )
+                it.findNavController().navigate(action)
+            }
         }
     }
 
